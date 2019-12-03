@@ -124,8 +124,9 @@ void            yield(void);
 int             changeTicket(int , int);
 void            printInfo(void);
 void            changeQ(int,int);
-void            changeR(int,int);
-
+void            changeR(int,char*);
+void convertFloatToString (float number, char* stringNumber);
+float stof(const char* s);
 // swtch.S
 void            swtch(struct context**, struct context*);
 

@@ -7,7 +7,7 @@
 #include "proc.h"
 #include "spinlock.h"
 
-
+int imanLastPid = -1;
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];
@@ -429,7 +429,7 @@ scheduler(void)
           if (found <= 0)
           {
             p = q1[i];
-            cprintf("$$$$$    %d\n",p->pid);
+            // cprintf("$$$$$    %d\n",p->pid);
             break;
             // return q1[i];
           }
@@ -453,7 +453,7 @@ scheduler(void)
             }
         }
         p = q2[index];
-        cprintf("$$$$$    %d\n",p->pid);
+        // cprintf("$$$$$    %d\n",p->pid);
         // return q2[index];
       }
 
@@ -468,11 +468,14 @@ scheduler(void)
             index = i;
           }
         }
-        if(q3[index]->remaining - 0.1 >= 0)
+        if(q3[index]->remaining - 0.10f >= 0)
           q3[index]->remaining = q3[index]->remaining - 0.1;    
         // return q3[index];
         p = q3[index];
-        cprintf("$$$$$    %d\n",p->pid);
+        if (imanLastPid != p->pid) {
+          imanLastPid = p->pid;
+          cprintf("$$$$$    %d\n",p->pid);
+        }
       }    
       else if(indexQ1 ==0 && indexQ2 ==0 && indexQ3 ==0 )
       {
@@ -696,6 +699,43 @@ int changeTicket(int ticket, int pid)
   return -1;
 }
 
+void convertFloatToString (float number, char* stringNumber) {
+  int integerPart = number, powerNumber = 1;
+  int intSize = 0;
+  int stringIndex = 0;
+  number = number - integerPart;
+  for (int i = 0; ; i++) {
+    if (integerPart < powerNumber)
+      break;
+    else {
+      intSize++;
+      powerNumber *= 10;
+    }
+  }
+
+  if (intSize == 0)
+    stringNumber[stringIndex++] = '0';
+  for (int i = 0; i < intSize; i++) {
+    powerNumber = powerNumber / 10;
+    stringNumber[stringIndex++] = (int)(integerPart / powerNumber) + '0';
+    integerPart = integerPart - ((int)(integerPart / powerNumber)) * powerNumber;
+  }
+  if (number == 0) {
+    stringNumber[stringIndex++] = '\0';
+    return;
+  }
+  stringNumber[stringIndex++] = '.';
+  for (int i = 0 ; i < 2; i++) {
+    if (number == 0)
+      break;
+    number = number * 10;
+    integerPart = number;
+    stringNumber[stringIndex++] = (int)(integerPart) + '0';
+    number = number - integerPart;
+  }
+  stringNumber[stringIndex++] = 0;
+  return;
+}
 
 void printInfo(void)
 {
@@ -709,15 +749,17 @@ void printInfo(void)
   [ZOMBIE]    "zombie"
   };
   char *state;
-
+  char remaingStr[30];
+  
   cprintf("name/\t pid/\t state/\t Q/\t ticket/\t creatTime/\t remaining\n");
   for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
   {
     state = states[p->state];
     if(p->pid !=0 )
     {
-      cprintf("%s\t %d\t %s\t %d\t %d\t %d\t %f \n\n\n",
-      p->name,p->pid,state,p->Q,p->ticket,p->arrival,p->remaining);
+      convertFloatToString(p->remaining, remaingStr);
+      cprintf("%s\t %d\t %s\t %d\t %d\t %d\t %s \n\n\n",
+      p->name,p->pid,state,p->Q,p->ticket,p->arrival,remaingStr);
     }
 
   }
@@ -737,16 +779,40 @@ void changeQ(int pid, int Q)
   
 }
 
-void changeR(int pid, int R)
+void changeR(int pid, char* a)
 {
   struct proc* p;
+  // convertFloatToString(R,a);
+  // cprintf("@@@@@@@@@ %s\n",a);
+
   for (p = ptable.proc;  p< &ptable.proc[NPROC];p++)
   {
     if(p->pid == pid)
-      p->remaining = R;
+      p->remaining = stof(a);
   }
   return;
   
   
 }
+
+float stof(const char* s){
+  float rez = 0, fact = 1;
+  if (*s == '-'){
+    s++;
+    fact = -1;
+  };
+  for (int point_seen = 0; *s; s++){
+    if (*s == '.'){
+      point_seen = 1; 
+      continue;
+    };
+    int d = *s - '0';
+    if (d >= 0 && d <= 9){
+      if (point_seen) fact /= 10.0f;
+      rez = rez * 10.0f + (float)d;
+    };
+  };
+  return rez * fact;
+};
+
 

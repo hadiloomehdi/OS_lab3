@@ -117,9 +117,12 @@ int sys_changeQ(void)
 
 int sys_changeR(void)
 {
-  int pid,R;
+  int pid;
+  char* R;
   argptr(0, (void *)&pid, sizeof(pid));
-  argptr(1, (void *)&R, sizeof(R));
+  argstr(1, &R);
+  // convertFloatToString(R,a);
+  // cprintf("!!!!!!!!!!! %s\n",a);
   changeR(pid,R);
   return 0;
 }
