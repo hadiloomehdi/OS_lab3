@@ -710,15 +710,15 @@ void printInfo(void)
   char *state;
   char remaingStr[30];
   
-  cprintf("name/\t pid/\t state/\t Q/\t ticket/\t creatTime/\t remaining\n");
+  cprintf("name/\t pid/\t state/\t Q/\t ticket/\t creatTime/\t remaining/\t cycle\n");
   for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
   {
     state = states[p->state];
     if(p->pid !=0 )
     {
       convertFloatToString(p->remaining, remaingStr);
-      cprintf("%s\t %d\t %s\t %d\t %d\t %d\t %s \n\n\n",
-      p->name,p->pid,state,p->Q,p->ticket,p->arrival,remaingStr);
+      cprintf("%s\t %d\t %s\t %d\t %d\t %d\t %s\t %d \n\n\n",
+      p->name,p->pid,state,p->Q,p->ticket,p->arrival,remaingStr,p->cycle);
     }
 
   }
