@@ -105,3 +105,12 @@ int sys_info(void)
   printInfo();
   return 0;
 }
+
+int sys_changeQ(void)
+{
+  int pid,Q;
+  argptr(0, (void *)&pid, sizeof(pid));
+  argptr(1, (void *)&Q, sizeof(Q));
+  changeQ(pid,Q);
+  return 0;
+}

@@ -356,8 +356,11 @@ wait(void)
 
 int rand()
 {
-  static int random = 3007;
-  random = ((random*random)/100)%10000;
+  // static int random = 3007;
+  // random = ((random*random)/100)%10000;
+  static int random = 3251;
+  random = (((random*random)/100)+53)%10000;
+  
   // cprintf("random = %d\n",random);
   return random;
   // static int next = 3251 ; // Anything you like here - but not
@@ -703,15 +706,28 @@ void printInfo(void)
   };
   char *state;
 
-  cprintf("name/ pid/ state/ Q/ \n");
+  cprintf("name/\t pid/\t state/\t Q/\t  ticket\n");
   for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
   {
     state = states[p->state];
     if(p->pid !=0 )
     {
-      cprintf("%s\t\t %d\t\t\t %s\t\t %d\t \n\n\n",p->name,p->pid,state,p->Q);
+      cprintf("%s\t\t %d\t\t\t %s\t\t %d\t %d \n\n\n",p->name,p->pid,state,p->Q,p->ticket);
     }
 
   }
+  
+}
+
+void changeQ(int pid, int Q)
+{
+  struct proc* p;
+  for (p = ptable.proc;  p< &ptable.proc[NPROC];p++)
+  {
+    if(p->pid == pid)
+      p->Q = Q;
+  }
+  return;
+  
   
 }
