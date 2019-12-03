@@ -23,3 +23,4 @@
 #define SYS_changeTicket 22
 #define SYS_info 23
 #define SYS_changeQ 24
+#define SYS_changeR 25

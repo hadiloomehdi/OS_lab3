@@ -100,8 +100,7 @@ exec(char *path, char **argv)
   curproc->tf->eip = elf.entry;  // main
   curproc->tf->esp = sp;
 
-  curproc->ticket = 535;
-  curproc->Q = 1;
+  curproc->ticket = 1000000;
   curproc->Q = 1;
   curproc->cycle =1;
   acquire(&tickslock);

@@ -106,6 +106,8 @@ extern int sys_uptime(void);
 extern int sys_changeTicket(void);
 extern int sys_info(void);
 extern int sys_changeQ(void);
+extern int sys_changeR(void);
+
 
 
 static int (*syscalls[])(void) = {
@@ -133,6 +135,7 @@ static int (*syscalls[])(void) = {
 [SYS_changeTicket]  sys_changeTicket,
 [SYS_info]    sys_info,
 [SYS_changeQ]   sys_changeQ,
+[SYS_changeR]   sys_changeR,
 };
 
 void

@@ -92,8 +92,8 @@ found:
 
   p->Q = 1;
   p->ticket = 10;
-  p->remaining = 1;
-  p->cycle =1;
+  p->remaining = 1.0;
+  p->cycle = 1;
   acquire(&tickslock);
   p->arrival = ticks;
   release(&tickslock);
@@ -429,6 +429,7 @@ scheduler(void)
           if (found <= 0)
           {
             p = q1[i];
+            cprintf("$$$$$    %d\n",p->pid);
             break;
             // return q1[i];
           }
@@ -452,6 +453,7 @@ scheduler(void)
             }
         }
         p = q2[index];
+        cprintf("$$$$$    %d\n",p->pid);
         // return q2[index];
       }
 
@@ -469,6 +471,7 @@ scheduler(void)
         if(q3[index]->remaining - 0.1 >= 0)
           q3[index]->remaining = q3[index]->remaining - 0.1;    
         // return q3[index];
+        p = q3[index];
       }    
       else if(indexQ1 ==0 && indexQ2 ==0 && indexQ3 ==0 )
       {
@@ -706,13 +709,14 @@ void printInfo(void)
   };
   char *state;
 
-  cprintf("name/\t pid/\t state/\t Q/\t  ticket\n");
+  cprintf("name/\t pid/\t state/\t Q/\t ticket/\t creatTime/\t remaining\n");
   for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
   {
     state = states[p->state];
     if(p->pid !=0 )
     {
-      cprintf("%s\t\t %d\t\t\t %s\t\t %d\t %d \n\n\n",p->name,p->pid,state,p->Q,p->ticket);
+      cprintf("%s\t %d\t %s\t %d\t %d\t %d\t %f \n\n\n",
+      p->name,p->pid,state,p->Q,p->ticket,p->arrival,p->remaining);
     }
 
   }
@@ -731,3 +735,17 @@ void changeQ(int pid, int Q)
   
   
 }
+
+void changeR(int pid, int R)
+{
+  struct proc* p;
+  for (p = ptable.proc;  p< &ptable.proc[NPROC];p++)
+  {
+    if(p->pid == pid)
+      p->remaining = R;
+  }
+  return;
+  
+  
+}
+

@@ -5,18 +5,17 @@
 int main(int argc, char *argv[])
 {
 
-	int pid,Q ;
+	int pid,R ;
 	if(argc != 3)
 		printf(1, "inappropriate arguments\n");
 	else
 	{
-        Q = atoi(argv[2]);
+        R = atoi(argv[2]);
         pid = atoi(argv[1]);
-        changeQ(pid,Q);
-		printf(1, "Q of procrss %d is %d    \n", pid, Q);
+        changeR(pid,R);
+		printf(1, "R of procrss %d is %d    \n", pid, R);
 	}
 	exit();
 
-    
     
 }

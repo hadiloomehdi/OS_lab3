@@ -27,6 +27,7 @@ int uptime(void);
 int changeTicket(int,int);
 void info(void);
 void changeQ(int,int);
+void changeR(int,int);
 
 // ulib.c
 int stat(const char*, struct stat*);

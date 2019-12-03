@@ -4,9 +4,6 @@
 
 int main(int argc, char *argv[])
 {
-    if(fork()>0)
-    {
-
 	int pid,ticket,res;
 	if(argc != 3)
 		printf(1, "inappropriate arguments\n");
@@ -18,11 +15,5 @@ int main(int argc, char *argv[])
 		printf(1, "ticket of procrss %d is %d   %d \n", pid, ticket,res);
 	}
 	exit();
-    }
-    else
-    {
-        while(1)
-        ;
-    }
     
 }

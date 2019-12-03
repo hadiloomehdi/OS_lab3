@@ -95,7 +95,7 @@ int sys_changeTicket(void)
   int pid,ticket;
   argptr(0, (void *)&pid, sizeof(pid));
   argptr(1, (void *)&ticket, sizeof(ticket));
-  cprintf("t = %d    pid = %d\n",ticket,pid);
+  // cprintf("t = %d    pid = %d\n",ticket,pid);
   int res = changeTicket(ticket,pid);
   return res;
 }
@@ -112,5 +112,14 @@ int sys_changeQ(void)
   argptr(0, (void *)&pid, sizeof(pid));
   argptr(1, (void *)&Q, sizeof(Q));
   changeQ(pid,Q);
+  return 0;
+}
+
+int sys_changeR(void)
+{
+  int pid,R;
+  argptr(0, (void *)&pid, sizeof(pid));
+  argptr(1, (void *)&R, sizeof(R));
+  changeR(pid,R);
   return 0;
 }

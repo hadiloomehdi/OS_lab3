@@ -124,6 +124,7 @@ void            yield(void);
 int             changeTicket(int , int);
 void            printInfo(void);
 void            changeQ(int,int);
+void            changeR(int,int);
 
 // swtch.S
 void            swtch(struct context**, struct context*);
