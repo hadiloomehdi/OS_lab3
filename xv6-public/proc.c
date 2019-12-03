@@ -472,6 +472,7 @@ scheduler(void)
           q3[index]->remaining = q3[index]->remaining - 0.1;    
         // return q3[index];
         p = q3[index];
+        cprintf("$$$$$    %d\n",p->pid);
       }    
       else if(indexQ1 ==0 && indexQ2 ==0 && indexQ3 ==0 )
       {
