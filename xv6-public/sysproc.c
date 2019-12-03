@@ -89,3 +89,19 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+int sys_changeTicket(void)
+{
+  int pid,ticket;
+  argptr(0, (void *)&pid, sizeof(pid));
+  argptr(1, (void *)&ticket, sizeof(ticket));
+  cprintf("t = %d    pid = %d\n",ticket,pid);
+  int res = changeTicket(ticket,pid);
+  return res;
+}
+
+int sys_info(void)
+{
+  printInfo();
+  return 0;
+}
