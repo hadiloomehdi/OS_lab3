@@ -103,6 +103,7 @@ exec(char *path, char **argv)
   curproc->ticket = 1000000;
   curproc->Q = 1;
   curproc->cycle =1;
+  curproc->remaining = 1.0;
   acquire(&tickslock);
   curproc->arrival = ticks;
   release(&tickslock);

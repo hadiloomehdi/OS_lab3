@@ -331,43 +331,11 @@ wait(void)
 //      via swtch back to the scheduler.
 
 
-
-// struct proc* manageQ1(struct proc *q1[],int len)
-// {
-//   int tot=0;
-//   for (int i = 0; i <= len; i++)
-//   {
-//     tot += q1[i]->ticket;
-//   }
-//   int found;
-//   time_t t;
-//   srand((unsigned)time(&t));
-//   found = rand()%tot;
-//   for (int i = 0; i <= len; i++)
-//   {
-//     found -= q1[i]->ticket;
-//     if (found <= 0)
-//       return q1[i];
-//   }
-// }
-
-// struct proc* manageQ2(struct proc *q2[],int len){}
-// struct proc* manageQ3(struct proc *q2[],int len){}
-
 int rand()
 {
-  // static int random = 3007;
-  // random = ((random*random)/100)%10000;
   static int random = 3251;
   random = (((random*random)/100)+53)%10000;
-  
-  // cprintf("random = %d\n",random);
   return random;
-  // static int next = 3251 ; // Anything you like here - but not
-  //                          // 0000, 0100, 2500, 3792, 7600,
-  //                          // 0540, 2916, 5030 or 3009.
-  // next = ((next * next) /   100)%10000 ;
-  // return next ;
 }
 
 void
@@ -386,12 +354,10 @@ scheduler(void)
     int indexQ1=0,indexQ2=0,indexQ3=0;
     // struct proc procs[NPROC] = {0};
     acquire(&ptable.lock);
-    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-      // cprintf("helppp%d\n",p->pid);
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+     {
       if(p->state != RUNNABLE)
         continue;
-      // cprintf("aaaaaaaaaa%d\n",p->pid);  
-      // cprintf("qqq%d\n",p->Q);
       if(p->Q == 1)
       {
         q1[indexQ1] = p;
@@ -409,96 +375,89 @@ scheduler(void)
       }
     }
 
-
-      // cprintf("here %d  %d    %d \n",indexQ1,indexQ2,indexQ3);
-      if (indexQ1 >0)
+    if (indexQ1 >0)
+    {
+      int tot=0;
+      for (int i = 0; i < indexQ1; i++)
       {
-        int tot=0;
-        for (int i = 0; i < indexQ1; i++)
+        tot += q1[i]->ticket;
+      }
+      int found=1;
+      
+      found = rand()%tot;
+
+      for (int i = 0; i < indexQ1; i++)
+      {
+        found -= q1[i]->ticket;
+        if (found <= 0)
         {
-          tot += q1[i]->ticket;
+          p = q1[i];
+          break;
         }
-        int found=1;
         
-        found = rand()%tot;
-        // cprintf("%d tot = %d and %d found %d \n",q1[0]->pid,tot,indexQ1,found);
-
-        for (int i = 0; i < indexQ1; i++)
-        {
-          found -= q1[i]->ticket;
-          if (found <= 0)
-          {
-            p = q1[i];
-            // cprintf("$$$$$    %d\n",p->pid);
-            break;
-            // return q1[i];
-          }
-          
-        }
       }
+    }
 
-      else if(indexQ2 > 0)
+    else if(indexQ2 > 0)
+    {
+      int max=0;
+      acquire(&tickslock);
+      int now = ticks;
+      release(&tickslock);
+      int index=0;
+      for (int i = 0; i < indexQ2; i++)
       {
-        int max=0;
-        acquire(&tickslock);
-        int now = ticks;
-        release(&tickslock);
-        int index=0;
-        for (int i = 0; i < indexQ2; i++)
-        {
-          if(max < (now-q2[i]->arrival)/q2[i]->cycle)
-            {
-              max = (now-q2[i]->arrival)/q2[i]->cycle;
-              index = i;
-            }
-        }
-        p = q2[index];
-        // cprintf("$$$$$    %d\n",p->pid);
-        // return q2[index];
-      }
-
-      else if(indexQ3 > 0)
-      {
-        int min=100,index=0;
-        for (int i = 0; i < indexQ3; i++)
-        {
-          if (min > q3[i]->remaining)
+        if(max < (now-q2[i]->arrival)/q2[i]->cycle)
           {
-            min = q3[i]->remaining;
+            max = (now-q2[i]->arrival)/q2[i]->cycle;
             index = i;
           }
-        }
-        if(q3[index]->remaining - 0.10f >= 0)
-          q3[index]->remaining = q3[index]->remaining - 0.1;    
-        // return q3[index];
-        p = q3[index];
-        if (imanLastPid != p->pid) {
-          imanLastPid = p->pid;
-          cprintf("$$$$$    %d\n",p->pid);
-        }
-      }    
-      else if(indexQ1 ==0 && indexQ2 ==0 && indexQ3 ==0 )
-      {
-        release(&ptable.lock);
-        continue;  
       }
+      p = q2[index];
+    }
+
+    else if(indexQ3 > 0)
+    {
+      int min=100,index=0;
+      for (int i = 0; i < indexQ3; i++)
+      {
+        if (min > q3[i]->remaining)
+        {
+          min = q3[i]->remaining;
+          index = i;
+        }
+      }
+      if(q3[index]->remaining - 0.10f >= 0)
+        q3[index]->remaining = q3[index]->remaining - 0.1;   
+      if(q3[index]->remaining < 0.1)
+         q3[index]->remaining = 0.0;
+      p = q3[index];
+      if (imanLastPid != p->pid) {
+        imanLastPid = p->pid;
+        // cprintf("$$$$$    %d\n",p->pid);
+      }
+    }    
+    else if(indexQ1 ==0 && indexQ2 ==0 && indexQ3 ==0 )
+    {
+      release(&ptable.lock);
+      continue;  
+    }
 
 
-      p->cycle ++;
-      // Switch to chosen process.  It is the process's job
-      // to release ptable.lock and then reacquire it
-      // before jumping back to us.
-      c->proc = p;
-      switchuvm(p);
-      p->state = RUNNING;
+    p->cycle ++;
+    // Switch to chosen process.  It is the process's job
+    // to release ptable.lock and then reacquire it
+    // before jumping back to us.
+    c->proc = p;
+    switchuvm(p);
+    p->state = RUNNING;
 
-      swtch(&(c->scheduler), p->context);
-      switchkvm();
+    swtch(&(c->scheduler), p->context);
+    switchkvm();
 
-      // Process is done running for now.
-      // It should have changed its p->state before coming back.
-      c->proc = 0;
-    // }
+    // Process is done running for now.
+    // It should have changed its p->state before coming back.
+    c->proc = 0;
     release(&ptable.lock);
 
   

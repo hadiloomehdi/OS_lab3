@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
         Q = atoi(argv[2]);
         pid = atoi(argv[1]);
         changeQ(pid,Q);
-		printf(1, "Q of procrss %d is %d    \n", pid, Q);
+		// printf(1, "Q of procrss %d is %d    \n", pid, Q);
 	}
 	exit();
 

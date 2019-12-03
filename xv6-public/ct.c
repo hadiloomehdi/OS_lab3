@@ -4,15 +4,15 @@
 
 int main(int argc, char *argv[])
 {
-	int pid,ticket,res;
+	int pid,ticket;
 	if(argc != 3)
 		printf(1, "inappropriate arguments\n");
 	else
 	{
         ticket = atoi(argv[2]);
         pid = atoi(argv[1]);
-		res = changeTicket(pid,ticket);
-		printf(1, "ticket of procrss %d is %d   %d \n", pid, ticket,res);
+		changeTicket(pid,ticket);
+		// printf(1, "ticket of procrss %d is %d   %d \n", pid, ticket,res);
 	}
 	exit();
     

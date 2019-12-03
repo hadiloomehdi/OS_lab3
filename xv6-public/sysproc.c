@@ -121,8 +121,6 @@ int sys_changeR(void)
   char* R;
   argptr(0, (void *)&pid, sizeof(pid));
   argstr(1, &R);
-  // convertFloatToString(R,a);
-  // cprintf("!!!!!!!!!!! %s\n",a);
   changeR(pid,R);
   return 0;
 }

@@ -1,9 +1,10 @@
 #include "types.h"
 #include "stat.h"
 #include "user.h"
-// #include <stdlib.h>
+
 float stof(const char* s);
 void convertFloatToString (float number, char* stringNumber);
+
 int main(int argc, char *argv[])
 {
 
@@ -22,8 +23,6 @@ int main(int argc, char *argv[])
 		// printf(1, "R of procrss %d is %s    \n", pid, a);
 	}
 	exit();
-
-    
 }
 
 

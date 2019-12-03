@@ -8,14 +8,7 @@ int main(int argc, char *argv[])
     {
         int pid = fork();
         if(pid == 0)
-        {
-                printf(1,"i am number %d\n",i);
-            while (1)
-            {
-            }
-            
-        }
+            while (1);            
     }
-    
-    
+    return 0;
 }
